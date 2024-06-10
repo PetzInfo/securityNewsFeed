@@ -11,7 +11,7 @@ struct NewsResponse: Decodable {
     let news: [NewsItem]
 }
 
-struct NewsItem: Decodable, Identifiable {
+struct NewsItem: Codable, Identifiable {
     var id: UUID { UUID() } // unique ID for SwiftUI List
     let articleID: Int
     let category: Category

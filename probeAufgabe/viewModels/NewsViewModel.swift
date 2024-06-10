@@ -22,15 +22,24 @@ class NewsViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let newsList):
-                    self.news = newsList
+                    self.news = newsList.map { item in
+                        var mutableItem = item
+                        mutableItem.isRead = item.isRead ?? false
+                        return mutableItem
+                    }.sorted(by: { $0.releasedate > $1.releasedate })
                     self.lastUpdate = Date()
-                    NewsStorage.shared.saveNews(newsList)
+                    NewsStorage.shared.saveNews(self.news)
                 case .failure(let error):
                     print("Failed to load news: \(error)")
-                    self.news = NewsStorage.shared.loadNews()
+                    self.news = NewsStorage.shared.loadNews().sorted(by: { $0.releasedate > $1.releasedate })
                 }
                 self.isLoading = false
             }
         }
+    }
+    
+    func markAsRead(at index: Int) {
+        news[index].isRead = true
+        NewsStorage.shared.saveNews(news)
     }
 }

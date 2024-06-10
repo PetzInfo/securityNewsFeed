@@ -21,14 +21,14 @@ struct NewsItem: Codable, Identifiable {
     let title: String
     let video: Video?
     
-    struct Category: Decodable {
+    struct Category: Codable {
         let iconURL: String
         let name: String
     }
     
-    struct ImageURL: Decodable {
+    struct ImageURL: Codable {
         let imageURL: String
     }
     
-    struct Video: Decodable {}
+    struct Video: Codable {}
 }

@@ -1,3 +1,8 @@
+// ContentView.swift
+// probeaufgabe
+// created by Friedrich Commichau
+// 10.06.2024
+
 import SwiftUI
 
 struct ContentView: View {
@@ -5,24 +10,30 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List(viewModel.news) { item in
-                NewsRowView(newsItem: item)
+            VStack {
+                if viewModel.isLoading {
+                    ProgressView("Loading news...")
+                } else if viewModel.news.isEmpty {
+                    Text("No news available.")
+                        .foregroundColor(.gray)
+                } else {
+                    List {
+                        ForEach(viewModel.news.indices, id: \.self) { index in
+                            NewsRowView(newsItem: viewModel.news[index])
+                                .onTapGesture {
+                                    viewModel.markAsRead(at: index)
+                                }
+                        }
+                    }
+                    .refreshable {
+                        viewModel.loadNews()
+                    }
+                    Text("Last updated: \(viewModel.lastUpdate?.formatted() ?? "Never")")
+                        .font(.footnote)
+                        .padding()
+                }
             }
             .navigationTitle("Nachrichten")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if viewModel.isLoading {
-                        ProgressView()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        viewModel.loadNews()
-                    }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
-            }
             .onAppear {
                 viewModel.loadNews()
             }
@@ -35,3 +46,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+

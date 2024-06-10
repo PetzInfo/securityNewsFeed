@@ -11,12 +11,8 @@ struct NewsRowView: View {
     let newsItem: NewsItem
     
     var body: some View {
-        HStack {
-            if let video = newsItem.video, video.videoURL != nil {
-                Image(systemName: "video")
-                    .resizable()
-                    .frame(width: 50, height: 50)
-            } else if let imageURLs = newsItem.imageURLs, let firstImageURL = imageURLs.first?.imageURL, let url = URL(string: firstImageURL) {
+        ZStack(alignment: .leading) {
+            if let imageURLs = newsItem.imageURLs, let firstImageURL = imageURLs.first?.imageURL, let url = URL(string: firstImageURL) {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:
@@ -24,57 +20,66 @@ struct NewsRowView: View {
                     case .success(let image):
                         image.resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 50, height: 50)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .clipped()
                     case .failure:
-                        Image(systemName: "photo")
-                            .resizable()
-                            .frame(width: 50, height: 50)
+                        Color.gray // Fallback color if image fails to load
                     @unknown default:
                         EmptyView()
                     }
                 }
-                .frame(width: 50, height: 50)
             } else {
-                AsyncImage(url: URL(string: newsItem.category.iconURL)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                    case .success(let image):
-                        image.resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 50, height: 50)
-                            .clipped()
-                    case .failure:
-                        Image(systemName: "photo")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                    @unknown default:
-                        EmptyView()
-                    }
-                }
-                .frame(width: 50, height: 50)
+                Color.clear
             }
             
-            VStack(alignment: .leading) {
-                Text(newsItem.title)
-                    .font(.headline)
-                Text(newsItem.releasedate)
-                    .font(.subheadline)
-                if let subtitle = newsItem.subtitle {
-                    Text(subtitle)
-                        .font(.body)
-                        .lineLimit(3)
+            HStack {
+                
+                if let video = newsItem.video, video.videoURL != nil {
+                    Image("VideoIcon")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .padding()
+                } else if newsItem.imageURLs == nil || newsItem.imageURLs?.isEmpty == true {
+                    Image(systemName: "lightbulb")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .padding()
                 }
+                Spacer()
+                
+                VStack(alignment: .leading) {
+                    Text(newsItem.title)
+                        .font(.headline)
+                        .padding(.bottom, 2)
+                    Text(newsItem.releasedate)
+                        .font(.subheadline)
+                        .padding(.bottom, 2)
+                    if let subtitle = newsItem.subtitle {
+                        Text(subtitle)
+                            .font(.body)
+                            .lineLimit(3)
+                            .padding(.bottom, 2)
+                    }
+                }
+                .padding()
+                
+                
             }
-            Spacer()
+            .padding()
+            .background(Color.white.opacity(0.8))
+            .cornerRadius(10)
+            
             if newsItem.isRead == false {
-                Circle()
+                Rectangle()
                     .fill(Color.blue)
-                    .frame(width: 10, height: 10)
+                    .frame(width: 5)
+                    .edgesIgnoringSafeArea(.leading)
             }
         }
-        .padding()
+        .background(Color.white)
+        .cornerRadius(10)
+        .shadow(radius: 5)
+        .padding([.horizontal, .top])
     }
 }
 
@@ -92,3 +97,4 @@ struct NewsRowView_Previews: PreviewProvider {
         ))
     }
 }
+

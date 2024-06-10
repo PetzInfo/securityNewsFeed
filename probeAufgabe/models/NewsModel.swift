@@ -15,9 +15,9 @@ struct NewsItem: Codable, Identifiable {
     var id: UUID { UUID() } // unique ID for SwiftUI List
     let articleID: Int
     let category: Category
-    let imageURLs: [ImageURL]
+    let imageURLs: [ImageURL]?
     let releasedate: String
-    let subtitle: String
+    let subtitle: String?
     let title: String
     let video: Video?
     

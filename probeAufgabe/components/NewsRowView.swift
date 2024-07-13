@@ -11,75 +11,63 @@ struct NewsRowView: View {
     let newsItem: NewsItem
     
     var body: some View {
-        ZStack(alignment: .leading) {
-            if let imageURLs = newsItem.imageURLs, let firstImageURL = imageURLs.first?.imageURL, let url = URL(string: firstImageURL) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                    case .success(let image):
-                        image.resizable()
+        
+        
+        HStack {
+            ZStack {
+                if let imageURLs = newsItem.imageURLs, !imageURLs.isEmpty {
+                    AsyncImage(url: URL(string: imageURLs[0].imageURL)) { image in
+                        image
+                            .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .clipped()
-                    case .failure:
-                        Color.gray // Fallback color if image fails to load
-                    @unknown default:
-                        EmptyView()
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(10)
+                    } placeholder: {
+                        Image(systemName: "photo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(10)
+                            .opacity(0.5)
                     }
                 }
-            } else {
-                Color.clear
-            }
-            
-            HStack {
-                
-                if let video = newsItem.video, video.videoURL != nil {
-                    Image("VideoIcon")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .padding()
-                } else if newsItem.imageURLs == nil || newsItem.imageURLs?.isEmpty == true {
-                    Image(systemName: "lightbulb")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .padding()
-                }
-                Spacer()
-                
-                VStack(alignment: .leading) {
-                    Text(newsItem.title)
-                        .font(.headline)
-                        .padding(.bottom, 2)
-                    Text(newsItem.releasedate)
-                        .font(.subheadline)
-                        .padding(.bottom, 2)
-                    if let subtitle = newsItem.subtitle {
-                        Text(subtitle)
-                            .font(.body)
-                            .lineLimit(3)
+                HStack {
+                    if let video = newsItem.video, video.videoURL != nil {
+                        Image("VideoIcon")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .padding()
+                    } else if newsItem.imageURLs == nil || newsItem.imageURLs?.isEmpty == true {
+                        Image(systemName: "lightbulb")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .padding()
+                    }
+                    Spacer()           
+                    VStack(alignment: .leading) {
+                        Text(newsItem.title)
+                            .font(.headline)
                             .padding(.bottom, 2)
+                        Text(newsItem.releasedate)
+                            .font(.subheadline)
+                            .padding(.bottom, 2)
+                        if let subtitle = newsItem.subtitle {
+                            Text(subtitle)
+                                .font(.body)
+                                .lineLimit(3)
+                                .padding(.bottom, 2)
+                        }
                     }
+                    .padding()
+                    
                 }
-                .padding()
-                
-                
             }
-            .padding()
-            .background(Color.white.opacity(0.8))
-            .cornerRadius(10)
             
-            if newsItem.isRead == false {
-                Rectangle()
-                    .fill(Color.blue)
-                    .frame(width: 5)
-                    .edgesIgnoringSafeArea(.leading)
-            }
         }
-        .background(Color.white)
-        .cornerRadius(10)
+        .padding(16)
+        .cornerRadius(16)
+        .background(Color.white.opacity(0.8))
         .shadow(radius: 5)
-        .padding([.horizontal, .top])
     }
 }
 

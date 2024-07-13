@@ -68,6 +68,16 @@ struct NewsRowView: View {
         .cornerRadius(16)
         .background(Color.white.opacity(0.8))
         .shadow(radius: 5)
+        .overlay(
+            VStack {
+                if !(newsItem.isRead ?? false) {
+                    Color.blue.frame(width: 5)
+                } else {
+                    Color.clear.frame(width: 5) // Placeholder to keep the same size
+                }
+            },
+            alignment: .leading
+        )
     }
 }
 

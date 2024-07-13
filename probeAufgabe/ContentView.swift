@@ -17,13 +17,16 @@ struct ContentView: View {
                     Text("No news available.")
                         .foregroundColor(.gray)
                 } else {
-                    List {
-                        ForEach(viewModel.news.indices, id: \.self) { index in
-                            NewsRowView(newsItem: viewModel.news[index])
-                                .onTapGesture {
-                                    viewModel.markAsRead(at: index)
-                                }
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 16) { // spacing to avoid lines between items
+                            ForEach(viewModel.news.indices, id: \.self) { index in
+                                NewsRowView(newsItem: viewModel.news[index])
+                                    .onTapGesture {
+                                        viewModel.markAsRead(at: index)
+                                    }
+                            }
                         }
+                        .padding()
                     }
                     .refreshable {
                         viewModel.loadNews()

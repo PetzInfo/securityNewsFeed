@@ -7,8 +7,8 @@
 
 import Foundation
 
-class NewsService {
-    static let shared = NewsService()
+class FetchDataService {
+    static let shared = FetchDataService()
     private let url = URL(string: "https://staging-probeapi.mobile-software.ag/rohdaten/SecurtiyInfo.json")!
     
     func fetchNews(completion: @escaping (Result<[NewsItem], Error>) -> Void) {
@@ -34,8 +34,8 @@ class NewsService {
             }
             
             do {
-                let newsResponse = try JSONDecoder().decode(NewsResponse.self, from: data)
-                completion(.success(newsResponse.news))
+                let apiResponse = try JSONDecoder().decode(APIResponse.self, from: data)
+                completion(.success(apiResponse.news))
             } catch {
                 completion(.failure(error))
             }

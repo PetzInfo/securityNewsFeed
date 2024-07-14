@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run iOS App",
+        "type": "lldb",
+        "request": "launch",
+        "program": "${workspaceFolder}/build/Debug-iphonesimulator/probeAufgabe.app/probeAufgabe",
+        "args": [],
+        "cwd": "${workspaceFolder}",
+        "preLaunchTask": "Build",
+        "postDebugTask": "",
+        "stopOnEntry": false,
+        "runInTerminal": false
+      }
+    ]
+  }
+  

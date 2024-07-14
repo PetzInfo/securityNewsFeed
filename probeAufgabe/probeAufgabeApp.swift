@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct probeAufgabeApp: App {
-    let persistenceController = PersistenceController.shared
+
 
     var body: some Scene {
         WindowGroup {

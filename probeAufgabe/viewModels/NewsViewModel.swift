@@ -17,26 +17,43 @@ class NewsViewModel: ObservableObject {
     }
     
     func loadNews() {
-        isLoading = true
-        FetchDataService.shared.fetchNews { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let newsList):
-                    self.news = newsList.map { item in
-                        var mutableItem = item
-                        mutableItem.isRead = item.isRead ?? false
-                        return mutableItem
-                    }.sorted(by: { $0.releasedate > $1.releasedate })
-                    self.lastUpdate = Date()
-                    NewsStorage.shared.saveNews(self.news)
-                case .failure(let error):
-                    print("Failed to load news: \(error)")
-                    self.news = NewsStorage.shared.loadNews().sorted(by: { $0.releasedate > $1.releasedate })
+    isLoading = true
+    
+    // Load existing news from local storage
+    let existingNews = NewsStorage.shared.loadNews()
+    
+    FetchDataService.shared.fetchNews { result in
+        DispatchQueue.main.async {
+            switch result {
+            case .success(let fetchedNews):
+                // Merge fetched news with existing news
+                var updatedNews = [NewsItem]()
+                
+                for fetchedItem in fetchedNews {
+                    if let existingItem = existingNews.first(where: { $0.articleID == fetchedItem.articleID }) {
+                        // Preserve the isRead status
+                        var mutableFetchedItem = fetchedItem
+                        mutableFetchedItem.isRead = existingItem.isRead
+                        updatedNews.append(mutableFetchedItem)
+                    } else {
+                        updatedNews.append(fetchedItem)
+                    }
                 }
-                self.isLoading = false
+                
+                // Sort by release date
+                self.news = updatedNews.sorted(by: { $0.releasedate > $1.releasedate })
+                self.lastUpdate = Date()
+                NewsStorage.shared.saveNews(self.news)
+                
+            case .failure(let error):
+                print("Failed to load news: \(error)")
+                self.news = existingNews.sorted(by: { $0.releasedate > $1.releasedate })
             }
+            
+            self.isLoading = false
         }
     }
+}
     
     func markAsRead(at index: Int) {
         news[index].isRead = true

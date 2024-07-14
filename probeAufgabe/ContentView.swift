@@ -18,7 +18,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                 } else {
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 16) { // spacing to avoid lines between items
+                        VStack {
                             ForEach(viewModel.news.indices, id: \.self) { index in
                                 NewsRowView(newsItem: viewModel.news[index])
                                     .onTapGesture {
@@ -27,6 +27,8 @@ struct ContentView: View {
                             }
                         }
                         .padding()
+                        .frame(alignment: .leading)
+                        
                     }
                     .refreshable {
                         viewModel.loadNews()

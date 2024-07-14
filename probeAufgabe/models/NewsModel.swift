@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NewsResponse: Decodable {
+struct APIResponse: Decodable {
     let news: [NewsItem]
 }
 

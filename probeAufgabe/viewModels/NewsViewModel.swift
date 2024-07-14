@@ -18,7 +18,7 @@ class NewsViewModel: ObservableObject {
     
     func loadNews() {
         isLoading = true
-        NewsService.shared.fetchNews { result in
+        FetchDataService.shared.fetchNews { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let newsList):

@@ -1,7 +1,7 @@
-```markdown
-# probeAufgabe
 
-Willkommen bei **probeAufgabe**, einer Nachrichten-App, die es Ihnen ermöglicht, aktuelle Sicherheitsnachrichten einfach und schnell zu durchsuchen. Diese App zeigt eine Liste von Nachrichtenartikeln mit Bildern, Videos und Details an und bietet eine einfache Möglichkeit, den Lesezustand der Artikel zu verfolgen.
+# SwiftUI Experimente
+
+Dieses Repo nutze ich um die Funktionen von SwiftUI und Xcode kennenzulernen. Dabei versuche ich eine App zu implementieren die Nachrichten von einer API abfängt und in einer Liste darstellt.
 
 ## Features
 
